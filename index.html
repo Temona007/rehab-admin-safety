@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IRF Admission Tool | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <h1 class="login-title">IRF Admission Tool</h1>
+      <p class="login-subtitle">Inpatient Rehabilitation Clinical Workflow</p>
+
+      <form id="loginForm" class="form-group">
+        <div class="form-group">
+          <label class="form-label" for="username">Email</label>
+          <input type="email" id="username" class="form-input" value="provider@irf.demo" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="form-input" value="••••••••" readonly>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <p class="login-subtitle" style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.8;">
+        Demo: Click Sign In to enter
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      sessionStorage.setItem('irf_logged_in', 'true');
+      sessionStorage.setItem('irf_user', document.getElementById('username').value);
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

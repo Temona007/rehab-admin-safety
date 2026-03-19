@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IRF Admission Tool | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="logo">IRF <span>Admission Tool</span></div>
+      <div class="user-badge">
+        <span id="userEmail">provider@irf.demo</span>
+        <button class="btn-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-wide">
+    <div class="card" style="margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Active Patients</h2>
+      <p style="font-size: 0.875rem; color: var(--text-muted);">Click a patient or add new admission</p>
+    </div>
+
+    <div id="patientsGrid" class="dashboard-grid"></div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-state-icon">📋</div>
+      <p>No active patients yet.</p>
+      <p style="font-size: 0.875rem; margin-top: 0.5rem;">Tap + to start a new admission.</p>
+    </div>
+  </main>
+
+  <a href="admission.html" class="fab" title="New admission">+</a>
+
+  <script src="data/demo-data.js"></script>
+  <script>
+    if (!sessionStorage.getItem('irf_logged_in')) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    document.getElementById('userEmail').textContent = sessionStorage.getItem('irf_user') || 'provider@irf.demo';
+
+    function logout() {
+      sessionStorage.removeItem('irf_logged_in');
+      sessionStorage.removeItem('irf_user');
+      window.location.href = 'index.html';
+    }
+
+    function getPatients() {
+      const stored = localStorage.getItem('irf_patients');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {}
+      }
+      localStorage.setItem('irf_patients', JSON.stringify(DEMO_DATA.patients));
+      return DEMO_DATA.patients;
+    }
+
+    function renderPatients() {
+      const patients = getPatients();
+      const grid = document.getElementById('patientsGrid');
+      const empty = document.getElementById('emptyState');
+
+      if (patients.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      grid.innerHTML = patients.map(p => `
+        <a href="admission.html?id=${p.id}" class="patient-card">
+          <div class="patient-card-header">
+            <span class="patient-name">${p.name}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">${p.mrn}</span>
+          </div>
+          <div class="patient-meta">${p.age} yrs • Admitted ${p.admissionDate}</div>
+          ${p.riskFlags && p.riskFlags.length ? `
+            <div class="patient-risks">
+              ${p.riskFlags.map(r => `<span class="risk-flag ${r === 'pressure-injury' ? 'danger' : r === 'polypharmacy' ? 'warning' : 'info'}">${r.replace(/-/g, ' ')}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${p.pendingTasks > 0 ? `<div class="patient-tasks">${p.pendingTasks} pending task(s)</div>` : ''}
+        </a>
+      `).join('');
+    }
+
+    renderPatients();
+  </script>
+</body>
+</html>

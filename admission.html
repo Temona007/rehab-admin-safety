@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IRF Admission Tool | Admission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-inner">
+      <a href="dashboard.html" class="logo" style="text-decoration: none;">← IRF <span>Admission</span></a>
+      <div class="user-badge">
+        <span id="progressText">Step 1 of 4</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="progress-bar no-print">
+      <div id="progressBar" class="progress-fill" style="width: 25%"></div>
+    </div>
+
+    <div class="stepper no-print">
+      <div class="step active" data-step="1">
+        <span class="step-num">1</span>
+        <span class="step-label">Intake</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="2">
+        <span class="step-num">2</span>
+        <span class="step-label">Clinical</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="3">
+        <span class="step-num">3</span>
+        <span class="step-label">Checklist</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" data-step="4">
+        <span class="step-num">4</span>
+        <span class="step-label">Summary</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Patient Intake -->
+    <div id="step1" class="step-content">
+      <div class="card">
+        <h2 class="card-title">Patient Intake</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Last Name <span class="required">*</span></label>
+            <input type="text" id="lastName" class="form-input" placeholder="Last name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">First Name <span class="required">*</span></label>
+            <input type="text" id="firstName" class="form-input" placeholder="First name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">DOB <span class="required">*</span></label>
+            <input type="date" id="dob" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">MRN</label>
+            <input type="text" id="mrn" class="form-input" placeholder="Medical record number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Admitting diagnosis <span class="required">*</span></label>
+          <input type="text" id="diagnosis" class="form-input" placeholder="e.g., Hip fracture s/p ORIF">
+        </div>
+      </div>
+      <button id="next1" class="btn btn-primary">Continue →</button>
+    </div>
+
+    <!-- Step 2: Clinical (conditional logic) -->
+    <div id="step2" class="step-content" style="display: none;">
+      <div class="card">
+        <h2 class="card-title">Allergies</h2>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="allergies" value="none" checked>
+            No known allergies
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="allergies" value="yes">
+            Has allergies
+          </label>
+        </div>
+        <div id="allergyDetails" class="conditional-section" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">List allergies</label>
+            <input type="text" id="allergyList" class="form-input" placeholder="e.g., Penicillin, Latex">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Home Medications</h2>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="meds" value="none" checked>
+            No home medications
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="meds" value="few">
+            1–5 medications
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="meds" value="many">
+            6+ medications (polypharmacy)
+          </label>
+        </div>
+        <div id="medsDetails" class="conditional-section" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Key medications to reconcile</label>
+            <textarea id="medList" class="form-textarea" rows="3" placeholder="List critical meds..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Skin / Pressure Injury Risk</h2>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="skin" value="intact" checked>
+            Skin intact, low risk
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="skin" value="risk">
+            At risk / existing wound
+          </label>
+        </div>
+        <div id="woundDetails" class="conditional-section" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Wound location / notes</label>
+            <input type="text" id="woundNotes" class="form-input" placeholder="e.g., Sacral stage 2">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Fall Risk</h2>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="fall" value="low" checked>
+            Low risk
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="radio" name="fall" value="high">
+            High risk
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button id="prev2" class="btn btn-secondary">← Back</button>
+        <button id="next2" class="btn btn-primary" style="margin-left: 0.5rem;">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Admission Checklist -->
+    <div id="step3" class="step-content" style="display: none;">
+      <div class="card">
+        <h2 class="card-title">Admission Checklist <span style="font-weight: 400; color: var(--text-muted);">(all required)</span></h2>
+        <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">Complete each item before proceeding.</p>
+        <div id="checklist"></div>
+      </div>
+
+      <div id="generatedTasks" class="card" style="display: none;">
+        <h2 class="card-title">Auto-generated Tasks</h2>
+        <div id="taskList"></div>
+      </div>
+
+      <div id="riskFlagsCard" class="card" style="display: none;">
+        <h2 class="card-title">Risk Flags</h2>
+        <div id="riskFlagsList"></div>
+      </div>
+
+      <div class="form-group">
+        <button id="prev3" class="btn btn-secondary">← Back</button>
+        <button id="next3" class="btn btn-primary" style="margin-left: 0.5rem;">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Summary + PDF -->
+    <div id="step4" class="step-content" style="display: none;">
+      <div id="summaryContent" class="card">
+        <h2 class="card-title">Admission Summary</h2>
+        <div id="summaryBody"></div>
+      </div>
+      <div class="form-group no-print">
+        <button id="prev4" class="btn btn-secondary">← Back</button>
+        <button id="btnPdf" class="btn btn-primary" style="margin-left: 0.5rem;">Download PDF Summary</button>
+        <a href="dashboard.html" id="btnDone" class="btn btn-primary" style="margin-left: 0.5rem; text-decoration: none;">Done</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="data/demo-data.js"></script>
+  <script src="js/admission.js"></script>
+</body>
+</html>
