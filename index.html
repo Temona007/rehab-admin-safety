@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IRF Admission Tool | Login</title>
+  <title>IRF Admission Tool</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="login-page">
+  <div id="loginView" class="login-page">
     <div class="login-card">
       <h1 class="login-title">IRF Admission Tool</h1>
       <p class="login-subtitle">Inpatient Rehabilitation Clinical Workflow</p>
-
       <form id="loginForm" class="form-group">
         <div class="form-group">
           <label class="form-label" for="username">Email</label>
@@ -26,20 +25,106 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Sign In</button>
       </form>
-
-      <p class="login-subtitle" style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.8;">
-        Demo: Click Sign In to enter
-      </p>
+      <p class="login-subtitle" style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.8;">Demo: Click Sign In to enter</p>
     </div>
   </div>
 
+  <div id="dashboardView" style="display: none;">
+    <header class="app-header">
+      <div class="app-header-inner">
+        <div class="logo">IRF <span>Admission Tool</span></div>
+        <div class="user-badge">
+          <span id="userEmail">provider@irf.demo</span>
+          <button class="btn-logout" id="btnLogout">Log out</button>
+        </div>
+      </div>
+    </header>
+    <main class="container-wide">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Active Patients</h2>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">Click a patient or add new admission</p>
+      </div>
+      <div id="patientsGrid" class="dashboard-grid"></div>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-state-icon">📋</div>
+        <p>No active patients yet.</p>
+        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Tap + to start a new admission.</p>
+      </div>
+    </main>
+    <a href="admission.html" class="fab" title="New admission">+</a>
+  </div>
+
   <script>
+    var DEMO_PATIENTS = [
+      { id: 'P001', mrn: 'MRN-2024-001', name: 'John Martinez', age: 72, admissionDate: '2025-03-18', status: 'active', riskFlags: ['polypharmacy', 'fall-risk'], pendingTasks: 3 },
+      { id: 'P002', mrn: 'MRN-2024-002', name: 'Sarah Chen', age: 65, admissionDate: '2025-03-19', status: 'active', riskFlags: ['pressure-injury'], pendingTasks: 2 },
+      { id: 'P003', mrn: 'MRN-2024-003', name: 'Robert Williams', age: 58, admissionDate: '2025-03-17', status: 'active', riskFlags: [], pendingTasks: 1 }
+    ];
+
+    function showDashboard() {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      document.getElementById('userEmail').textContent = 'provider@irf.demo';
+      renderPatients();
+    }
+
+    function showLogin() {
+      document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('dashboardView').style.display = 'none';
+    }
+
+    function getPatients() {
+      var stored = localStorage.getItem('irf_patients');
+      var patients = [];
+      if (stored) {
+        try { patients = JSON.parse(stored); } catch (e) {}
+      }
+      if (!patients || patients.length === 0) {
+        patients = DEMO_PATIENTS.slice();
+        localStorage.setItem('irf_patients', JSON.stringify(patients));
+      }
+      return patients;
+    }
+
+    function renderPatients() {
+      var patients = getPatients();
+      var grid = document.getElementById('patientsGrid');
+      var empty = document.getElementById('emptyState');
+      if (patients.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      grid.innerHTML = patients.map(function(p) {
+        var risks = (p.riskFlags && p.riskFlags.length) ? p.riskFlags.map(function(r) {
+          var cls = r === 'pressure-injury' ? 'danger' : r === 'polypharmacy' ? 'warning' : 'info';
+          return '<span class="risk-flag ' + cls + '">' + r.replace(/-/g, ' ') + '</span>';
+        }).join('') : '';
+        return '<a href="admission.html?id=' + p.id + '" class="patient-card">' +
+          '<div class="patient-card-header"><span class="patient-name">' + p.name + '</span>' +
+          '<span style="font-size: 0.75rem; color: var(--text-muted);">' + p.mrn + '</span></div>' +
+          '<div class="patient-meta">' + p.age + ' yrs • Admitted ' + p.admissionDate + '</div>' +
+          (risks ? '<div class="patient-risks">' + risks + '</div>' : '') +
+          (p.pendingTasks > 0 ? '<div class="patient-tasks">' + p.pendingTasks + ' pending task(s)</div>' : '') +
+          '</a>';
+      }).join('');
+    }
+
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      sessionStorage.setItem('irf_logged_in', 'true');
-      sessionStorage.setItem('irf_user', document.getElementById('username').value);
-      window.location.href = 'dashboard.html';
+      localStorage.setItem('irf_logged_in', 'true');
+      showDashboard();
     });
+
+    document.getElementById('btnLogout').addEventListener('click', function() {
+      localStorage.removeItem('irf_logged_in');
+      showLogin();
+    });
+
+    if (localStorage.getItem('irf_logged_in') === 'true') {
+      showDashboard();
+    }
   </script>
 </body>
 </html>

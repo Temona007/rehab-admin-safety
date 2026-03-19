@@ -12,7 +12,7 @@
 <body>
   <header class="app-header">
     <div class="app-header-inner">
-      <a href="dashboard.html" class="logo" style="text-decoration: none;">← IRF <span>Admission</span></a>
+      <a href="index.html" class="logo" style="text-decoration: none;">← IRF <span>Admission</span></a>
       <div class="user-badge">
         <span id="progressText">Step 1 of 4</span>
       </div>
@@ -207,12 +207,22 @@
       <div class="form-group no-print">
         <button id="prev4" class="btn btn-secondary">← Back</button>
         <button id="btnPdf" class="btn btn-primary" style="margin-left: 0.5rem;">Download PDF Summary</button>
-        <a href="dashboard.html" id="btnDone" class="btn btn-primary" style="margin-left: 0.5rem; text-decoration: none;">Done</a>
+        <a href="index.html" id="btnDone" class="btn btn-primary" style="margin-left: 0.5rem; text-decoration: none;">Done</a>
       </div>
     </div>
   </main>
 
-  <script src="data/demo-data.js"></script>
+  <script>
+    var DEMO_DATA = { checklistSteps: [
+      { id: 'vitals', label: 'Vitals documented', required: true },
+      { id: 'allergies', label: 'Allergies verified', required: true },
+      { id: 'meds', label: 'Home medications reconciled', required: true },
+      { id: 'consults', label: 'Required consults ordered', required: true },
+      { id: 'skin', label: 'Skin assessment completed', required: true },
+      { id: 'fall', label: 'Fall risk assessment', required: true },
+      { id: 'goals', label: 'Rehab goals documented', required: true }
+    ]};
+  </script>
   <script src="js/admission.js"></script>
 </body>
 </html>

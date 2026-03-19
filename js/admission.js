@@ -3,7 +3,7 @@
  */
 
 (function() {
-  if (!sessionStorage.getItem('irf_logged_in')) {
+  if (!localStorage.getItem('irf_logged_in')) {
     window.location.href = 'index.html';
     return;
   }

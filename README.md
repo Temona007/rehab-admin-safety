@@ -14,7 +14,7 @@ A fast, 5-minute clinical workflow checklist for inpatient rehabilitation (IRF) 
 
 ## Quick Start
 
-1. Open `index.html` in a browser (or serve via any static server).
+1. Open `index.html` in your browser (double-click or File → Open). No server needed.
 2. Click **Sign In** (credentials are pre-filled for demo).
 3. View the dashboard and click a patient or **+** to start a new admission.
 4. Complete the 4-step flow: Intake → Clinical → Checklist → Summary.
@@ -23,7 +23,7 @@ A fast, 5-minute clinical workflow checklist for inpatient rehabilitation (IRF) 
 ## Tech Stack
 
 - HTML, CSS, JavaScript (vanilla)
-- Demo data in `data/demo-data.js`
+- Demo data inlined in HTML (no external data files)
 - `localStorage` for persistence (no backend)
 
 ## Project Structure
@@ -31,11 +31,10 @@ A fast, 5-minute clinical workflow checklist for inpatient rehabilitation (IRF) 
 ```
 rehab-admin-safety/
 ├── index.html       # Login (pre-filled)
-├── dashboard.html   # Active patients
-├── admission.html   # 4-step admission flow
+├── dashboard.html   # Active patients + demo data
+├── admission.html   # 4-step admission flow + checklist data
 ├── css/styles.css   # Styles
 ├── js/admission.js  # Admission logic
-├── data/demo-data.js
 └── README.md
 ```
 
