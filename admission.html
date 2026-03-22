@@ -220,7 +220,8 @@
       { id: 'consults', label: 'Required consults ordered', required: true },
       { id: 'skin', label: 'Skin assessment completed', required: true },
       { id: 'fall', label: 'Fall risk assessment', required: true },
-      { id: 'goals', label: 'Rehab goals documented', required: true }
+      { id: 'goals', label: 'Rehab goals documented', required: true },
+      { id: 'wound-consult', label: 'Wound care consult ordered', required: true, when: 'skin=risk' }
     ]};
   </script>
   <script src="js/admission.js"></script>
